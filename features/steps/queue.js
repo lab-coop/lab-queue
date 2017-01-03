@@ -18,12 +18,12 @@ module.exports = function() {
     assert((await queue.consume(queueName, () => {})));
   });
 
-  this.Then('"$queueName" contains "$messageCount" message', async function (queueName, messageCount) {
+  this.When('"$queueName" contains $messageCount message', async function (queueName, messageCount) {
+    messageCount = parseInt(messageCount);
     const queue = await container.get('queue');
     this.thrown = false;
     try {
       const checkResult = await queue.messageCount(queueName);
-      console.log(checkResult);
       return assert(checkResult === messageCount);
     } catch(err) {
       console.log(err);
@@ -31,7 +31,8 @@ module.exports = function() {
     }
   });
 
-  this.Then('"$queueName" has "$consumerCount" consumer', async function (queueName, consumerCount) {
+  this.Then('"$queueName" has $consumerCount consumer', async function (queueName, consumerCount) {
+    consumerCount = parseInt(consumerCount);
     const queue = await container.get('queue');
     this.thrown = false;
     try {
