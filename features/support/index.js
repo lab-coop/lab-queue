@@ -5,5 +5,9 @@ module.exports = function() {
 };
 
 function setupConfig(config) {
-  // config.update('newsService','memory');
+  config.update('consume', {
+    defaults: {
+      prefetchCount: 1
+    }
+  });
 }
