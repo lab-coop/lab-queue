@@ -3,22 +3,22 @@ import { assert } from 'chai';
 module.exports = function() {
   const container = this.container;
 
-  this.Given('{queueName:stringInDoubleQuotes} doesn\'t exist', async function (queueName) {
+  this.Given('"$queueName" doesn\'t exist', async function (queueName) {
     const queue = await container.get('queue');
     await queue.removeIfExists(queueName);
   });
 
-  this.When('a random message pushed to queue {queueName:stringInDoubleQuotes}', async function (queueName) {
+  this.When('a random message pushed to queue "$queueName"', async function (queueName) {
     const queue = await container.get('queue');
     assert((await queue.publish(queueName, true)));
   });
 
-  this.When('a consumer is attached to queue {queueName:stringInDoubleQuotes}', async function (queueName) {
+  this.When('a consumer is attached to queue "$queueName"', async function (queueName) {
     const queue = await container.get('queue');
     assert((await queue.consume(queueName, () => {})));
   });
 
-  this.Then('{queueName:stringInDoubleQuotes} contains {messageCount:int} message', async function (queueName, messageCount) {
+  this.Then('"$queueName" contains "$messageCount" message', async function (queueName, messageCount) {
     const queue = await container.get('queue');
     this.thrown = false;
     try {
@@ -31,7 +31,7 @@ module.exports = function() {
     }
   });
 
-  this.Then('{queueName:stringInDoubleQuotes} has {consumerCount:int} consumer', async function (queueName, consumerCount) {
+  this.Then('"$queueName" has "$consumerCount" consumer', async function (queueName, consumerCount) {
     const queue = await container.get('queue');
     this.thrown = false;
     try {

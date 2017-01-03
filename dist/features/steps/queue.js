@@ -15,7 +15,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 module.exports = function () {
   var container = this.container;
 
-  this.Given('{queueName:stringInDoubleQuotes} doesn\'t exist', function () {
+  this.Given('"$queueName" doesn\'t exist', function () {
     var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(queueName) {
       var queue;
       return _regenerator2.default.wrap(function _callee$(_context) {
@@ -43,7 +43,7 @@ module.exports = function () {
     };
   }());
 
-  this.When('a random message pushed to queue {queueName:stringInDoubleQuotes}', function () {
+  this.When('a random message pushed to queue "$queueName"', function () {
     var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(queueName) {
       var queue;
       return _regenerator2.default.wrap(function _callee2$(_context2) {
@@ -76,7 +76,7 @@ module.exports = function () {
     };
   }());
 
-  this.When('a consumer is attached to queue {queueName:stringInDoubleQuotes}', function () {
+  this.When('a consumer is attached to queue "$queueName"', function () {
     var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(queueName) {
       var queue;
       return _regenerator2.default.wrap(function _callee3$(_context3) {
@@ -109,7 +109,7 @@ module.exports = function () {
     };
   }());
 
-  this.Then('{queueName:stringInDoubleQuotes} contains {messageCount:int} message', function () {
+  this.Then('"$queueName" contains "$messageCount" message', function () {
     var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(queueName, messageCount) {
       var queue, checkResult;
       return _regenerator2.default.wrap(function _callee4$(_context4) {
@@ -153,7 +153,7 @@ module.exports = function () {
     };
   }());
 
-  this.Then('{queueName:stringInDoubleQuotes} has {consumerCount:int} consumer', function () {
+  this.Then('"$queueName" has "$consumerCount" consumer', function () {
     var _ref5 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee5(queueName, consumerCount) {
       var queue, checkResult;
       return _regenerator2.default.wrap(function _callee5$(_context5) {
