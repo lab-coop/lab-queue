@@ -1,0 +1,70 @@
+{
+  "name": "queue",
+  "version": "1.0.0",
+  "description": "",
+  "main": "queue.js",
+  "engines": {
+    "node": ">=6.9.1"
+  },
+  "scripts": {
+    "test": "npm run units && npm run features",
+    "watch": "npm-watch",
+    "units": "jest",
+    "units-watch": "jest --watch",
+    "features": "node_modules/cucumber/bin/cucumber.js --require dist/features/support/index.js --require dist/features",
+    "features-watch": "node_modules/nodemon/bin/nodemon.js node_modules/cucumber/bin/cucumber.js --require dist/features/support/index.js --require dist/features"
+  },
+  "watch": {
+    "features": {
+      "patterns": [
+        "dist/**"
+      ],
+      "extensions": [
+        "js",
+        "json",
+        "feature"
+      ],
+      "ignore": [
+        "node_modules"
+      ]
+    },
+    "units": {
+      "patterns": [
+        "dist/**/*.test.js",
+        "dist/**/*.spec.js"
+      ],
+      "extensions": [
+        "js"
+      ],
+      "ignore": [
+        "node_modules"
+      ]
+    }
+  },
+  "author": "Denes Pal <denes.pal@lab.coop>",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "babel-preset-latest": "^6.16.0",
+    "chai": "^3.5.0",
+    "cucumber": "^1.3.1",
+    "jest": "^17.0.3",
+    "nodemon": "^1.11.0",
+    "npm-watch": "^0.1.6"
+  },
+  "jest": {
+    "verbose": true,
+    "bail": false,
+    "testPathDirs": [
+      "dist/"
+    ]
+  },
+  "dependencies": {
+    "amqplib": "^0.5.1",
+    "babel-runtime": "^6.20.0",
+    "lab-config": "github:lab-coop/lab-config",
+    "lab-di": "github:lab-coop/lab-di",
+    "lodash": "^4.17.2",
+    "shortid": "^2.2.6"
+  }
+}
