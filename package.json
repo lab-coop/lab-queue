@@ -11,8 +11,8 @@
     "watch": "npm-watch",
     "units": "jest",
     "units-watch": "jest --watch",
-    "features": "node_modules/cucumber/bin/cucumber.js --require dist/features/support/index.js --require dist/features",
-    "features-watch": "node_modules/nodemon/bin/nodemon.js node_modules/cucumber/bin/cucumber.js --require dist/features/support/index.js --require dist/features"
+    "features": "node_modules/cucumber/bin/cucumber.js --compiler es6:babel-core/register",
+    "features-watch": "node_modules/nodemon/bin/nodemon.js node_modules/cucumber/bin/cucumber.js --compiler es6:babel-core/register"
   },
   "watch": {
     "features": {
