@@ -1,13 +1,11 @@
 import crypto from 'crypto';
 import amqp from 'amqplib';
 import { isInteger, defaults, values } from 'lodash';
-import defaultConfig from './defaults';
 const connections = {};
 const channels = {};
 const url = require('url');
 
 export async function getConnection(config) {
-  config = defaults(config, defaultConfig);
   const connectionKey = getConnectionKey(config);
   if (!connections.hasOwnProperty(connectionKey)) {
     const connectionUrl = assertHearthBeatSupport(config.url, config.hearthbeat);
