@@ -103,8 +103,7 @@ function deleteConnection(connectionKey) {
 
 export async function getOrCreateChannel(queueName, createChannel, forceNewChannel=false) {
   if (forceNewChannel) {
-    const channel = await createChannel();
-    return channel;
+    return createChannel();
   } else if (!channels.hasOwnProperty(queueName)) {
     channels[queueName] = await createChannel();
   }
