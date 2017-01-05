@@ -15,7 +15,7 @@ const connectionConfigs = [
   }
 ];
 
-beforeEach(async function() {
+afterEach(async function() {
   await closeConnections();
 });
 
@@ -34,6 +34,7 @@ it('should create a connection', async function() {
 it('should close a single connection', async function() {
   const connection = await getConnection(connectionConfigs[0]);
   await closeConnection(connection);
+  expect(Object.keys(getConnections())).toHaveLength(0);
 });
 
 it('shouldn\'t complain to close an already closed connection', async function() {
