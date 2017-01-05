@@ -24,7 +24,7 @@ function queueService(config) {
     consumerCount
   });
 
-  async function consume(queueName, messageHandler, options = config.get('consume.defaults')) {
+  async function consume(queueName, messageHandler, options = config.get('queue.consume.defaults')) {
     const channel = await getChannelAssert(queueName);
     await channel.prefetch(options.prefetchCount);
     const consumerOptions = pick(options, ['noLocal', 'noAck', 'exclusive', 'priority', 'arguments']);
