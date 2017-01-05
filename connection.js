@@ -13,6 +13,7 @@ export async function getConnection(config) {
     const storeConnection = storeConnectionFactory(connectionKey);
     const connectAndStore = connectAndStoreFactory(connect, storeConnection);
     const connection = await connectAndStore();
+    connection.__key = connectionKey;
     handleConnectionError(connection, config.reconnect, connectAndStore);
   }
   return connections[connectionKey];
@@ -86,13 +87,18 @@ export async function closeConnections() {
 
 export async function closeConnection(connection) {
   try {
-    return await connection.close();
+    await connection.close();
+    deleteConnection(connection.__key);
   } catch (err) {
     return true;
   }
 }
 
 export async function getChannel(queueName, createChannel, forceNewChannel=false) {
+function deleteConnection(connectionKey) {
+  delete connections[connectionKey];
+}
+
   if (forceNewChannel) {
     const channel = await createChannel();
     handleError(channel);
