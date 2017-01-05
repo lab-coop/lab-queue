@@ -14,7 +14,7 @@ export async function getConnection(config) {
     const connect = connectFactory(connectionUrl);
     const storeConnection = storeConnectionFactory(connectionKey);
     const connectAndStore = connectAndStoreFactory(connect, storeConnection);
-    const connection = await connectAndStore(connect, storeConnection);
+    const connection = await connectAndStore();
     handleConnectionError(connection, config.reconnect, connectAndStore);
   }
   return connections[connectionKey];
