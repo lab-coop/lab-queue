@@ -8,15 +8,18 @@ const url = require('url');
 export async function getConnection(config) {
   const connectionKey = getConnectionKey(config);
   if (!connections.hasOwnProperty(connectionKey)) {
-    const connectionUrl = assertHearthBeatSupport(config.url, config.hearthbeat);
-    const connect = connectFactory(connectionUrl);
-    const storeConnection = storeConnectionFactory(connectionKey);
-    const connectAndStore = connectAndStoreFactory(connect, storeConnection);
-    const connection = await connectAndStore();
-    connection.__key = connectionKey;
-    handleConnectionError(connection, config.reconnect, connectAndStore);
+    connections[connectionKey] = new Promise(async function(resolve, reject) {
+      const connectionUrl = assertHearthBeatSupport(config.url, config.hearthbeat);
+      const connect = connectFactory(connectionUrl);
+      const storeConnection = storeConnectionFactory(connectionKey);
+      const connectAndStore = connectAndStoreFactory(connect, storeConnection);
+      const connection = await connectAndStore();
+      connection.__key = connectionKey;
+      handleConnectionError(connection, config.reconnect, connectAndStore);
+      resolve(connection);
+    });
   }
-  return connections[connectionKey];
+  return await connections[connectionKey];
 }
 
 export function getConnections() {
