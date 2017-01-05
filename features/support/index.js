@@ -5,6 +5,10 @@ module.exports = function() {
 };
 
 function setupConfig(config) {
+  config.update('queue', {
+    url: 'amqp://localhost',
+    hearthbeat: 10
+  });
   config.update('consume', {
     defaults: {
       prefetchCount: 1

@@ -3,7 +3,8 @@ import {
   getConnections,
   closeConnection,
   closeConnections,
-  assertHearthBeatSupport
+  assertHearthBeatSupport,
+  getOrCreateChannel
 } from './connection';
 
 const connectionConfigs = [
@@ -52,5 +53,11 @@ it('should create a new connection if the connection string differs', async func
   await getConnection(connectionConfigs[0]);
   await getConnection(connectionConfigs[1]);
   expect(Object.keys(getConnections())).toHaveLength(2);
+});
+
+it('create channel should call channel creator exactly once', async function() {
+  const channelCreator = jest.fn();
+  await getOrCreateChannel('test-channel', channelCreator);
+  expect(channelCreator.mock.calls.length).toBe(1);
 });
 

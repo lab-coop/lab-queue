@@ -94,11 +94,11 @@ export async function closeConnection(connection) {
   }
 }
 
-export async function getChannel(queueName, createChannel, forceNewChannel=false) {
 function deleteConnection(connectionKey) {
   delete connections[connectionKey];
 }
 
+export async function getOrCreateChannel(queueName, createChannel, forceNewChannel=false) {
   if (forceNewChannel) {
     const channel = await createChannel();
     return channel;

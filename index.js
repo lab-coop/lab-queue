@@ -1,7 +1,8 @@
 import { handle as handleMessage, encode } from './message';
 import {
   getConnection,
-  getChannel,
+  getOrCreateChannel,
+  handleChannelError,
   closeChannel,
   punishNonExistentQueue,
   runQueueOperation,
@@ -62,7 +63,7 @@ function queueService(config) {
   }
 
   async function remove(queueName) {
-    const channel = await getChannel(queueName, createChannelFactory());
+    const channel = await getChannel(queueName);
     return removeQueueFactory(queueName)(channel);
   }
 
@@ -76,7 +77,7 @@ function queueService(config) {
 
   async function purge(queueName) {
     return safeQueueOperation(queueName, purgeQueueFactory(queueName));
-    const channel = await getChannel(queueName, createChannelFactory());
+    const channel = await getChannel(queueName);
     return purgeQueueFactory(queueName)(channel);
   }
 
@@ -88,15 +89,21 @@ function queueService(config) {
   }
 
   async function safeQueueOperation(queueName, queueOperation) {
-    const channel = await getChannel(queueName, createChannelFactory(), true);
+    const channel = await getChannel(queueName, true);
     const queueOperationResult = await runQueueOperation(() => queueOperation(channel));
     await closeChannel(channel);
     return queueOperationResult;
   }
 
   async function getChannelAssert(queueName) {
-    const channel = await getChannel(queueName, createChannelFactory());
+    const channel = await getChannel(queueName);
     await channel.assertQueue(queueName);
+    return channel;
+  }
+
+  async function getChannel(queueName, forceNew=false) {
+    const channel = await getOrCreateChannel(queueName, createChannelFactory(), forceNew);
+    handleChannelError(channel);
     return channel;
   }
 
