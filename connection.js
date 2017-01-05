@@ -101,16 +101,13 @@ function deleteConnection(connectionKey) {
 
   if (forceNewChannel) {
     const channel = await createChannel();
-    handleError(channel);
     return channel;
   } else if (!channels.hasOwnProperty(queueName)) {
     channels[queueName] = await createChannel();
-    handleError(channels[queueName]);
   }
   return channels[queueName];
 }
 
-function handleError(channel) {
   channel.on('error', error => {
     if (/404/.test(error)) {
 
