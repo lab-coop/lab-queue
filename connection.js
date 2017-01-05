@@ -108,6 +108,11 @@ function deleteConnection(connectionKey) {
   return channels[queueName];
 }
 
+export function getChannels() {
+  return channels;
+}
+
+export function handleChannelError(channel) {
   channel.on('error', error => {
     if (/404/.test(error)) {
 
