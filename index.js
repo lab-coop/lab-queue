@@ -127,5 +127,5 @@ function queueService(config) {
   }
 }
 
-queueService.deps = ['config'];
+// queueService.deps = ['config'];
 export default queueService;
