@@ -1,8 +1,8 @@
 {
-  "name": "queue",
+  "name": "lab-queue",
   "version": "1.0.0",
   "description": "",
-  "main": "queue.js",
+  "main": "dist/index.js",
   "engines": {
     "node": ">=6.9.1"
   },
