@@ -14,6 +14,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 module.exports = function () {
   var container = this.container;
+  var lastMessage = void 0;
 
   this.Given('"$queueName" doesn\'t exist', function () {
     var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(queueName) {
@@ -76,8 +77,8 @@ module.exports = function () {
     };
   }());
 
-  this.When('a consumer is attached to queue "$queueName"', function () {
-    var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(queueName) {
+  this.When('the message "$message" is pushed to queue "$queueName"', function () {
+    var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(message, queueName) {
       var queue;
       return _regenerator2.default.wrap(function _callee3$(_context3) {
         while (1) {
@@ -90,11 +91,11 @@ module.exports = function () {
               queue = _context3.sent;
               _context3.t0 = _chai.assert;
               _context3.next = 6;
-              return queue.consume(queueName, function () {});
+              return queue.publish(queueName, message);
 
             case 6:
               _context3.t1 = _context3.sent;
-              (0, _context3.t0)(_context3.t1, "Expected consume to return truthy");
+              (0, _context3.t0)(_context3.t1, "Expected publish to return truthy");
 
             case 8:
             case 'end':
@@ -104,62 +105,54 @@ module.exports = function () {
       }, _callee3, this);
     }));
 
-    return function (_x3) {
+    return function (_x3, _x4) {
       return _ref3.apply(this, arguments);
     };
   }());
 
-  this.When('"$queueName" contains $messageCount message', function () {
-    var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(queueName, messageCount) {
-      var queue, checkResult;
+  this.When('a consumer is attached to queue "$queueName"', function () {
+    var _ref4 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee4(queueName) {
+      var queue;
       return _regenerator2.default.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              messageCount = parseInt(messageCount);
-              _context4.next = 3;
+              _context4.next = 2;
               return container.queue;
 
-            case 3:
+            case 2:
               queue = _context4.sent;
+              _context4.t0 = _chai.assert;
+              _context4.next = 6;
+              return queue.consume(queueName, function (message) {
+                lastMessage = message;
+              });
 
-              this.thrown = false;
-              _context4.prev = 5;
-              _context4.next = 8;
-              return queue.messageCount(queueName);
+            case 6:
+              _context4.t1 = _context4.sent;
+              (0, _context4.t0)(_context4.t1, "Expected consume to return truthy");
 
             case 8:
-              checkResult = _context4.sent;
-              return _context4.abrupt('return', (0, _chai.assert)(checkResult === messageCount, "Expected checkResult to equal messageCount"));
-
-            case 12:
-              _context4.prev = 12;
-              _context4.t0 = _context4['catch'](5);
-
-              console.log(_context4.t0);
-              this.thrown = true;
-
-            case 16:
             case 'end':
               return _context4.stop();
           }
         }
-      }, _callee4, this, [[5, 12]]);
+      }, _callee4, this);
     }));
 
-    return function (_x4, _x5) {
+    return function (_x5) {
       return _ref4.apply(this, arguments);
     };
   }());
 
-  this.Then('"$queueName" has $consumerCount consumer', function () {
-    var _ref5 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee5(queueName, consumerCount) {
+  this.When('"$queueName" contains $messageCount message', function () {
+    var _ref5 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee5(queueName, messageCount) {
       var queue, checkResult;
       return _regenerator2.default.wrap(function _callee5$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
-              consumerCount = parseInt(consumerCount);
+              messageCount = parseInt(messageCount);
               _context5.next = 3;
               return container.queue;
 
@@ -169,11 +162,11 @@ module.exports = function () {
               this.thrown = false;
               _context5.prev = 5;
               _context5.next = 8;
-              return queue.consumerCount(queueName);
+              return queue.messageCount(queueName);
 
             case 8:
               checkResult = _context5.sent;
-              return _context5.abrupt('return', (0, _chai.assert)(checkResult === consumerCount, "Expected checkResult to equal consumerCount"));
+              return _context5.abrupt('return', (0, _chai.assert)(checkResult === messageCount, "Expected checkResult to equal messageCount"));
 
             case 12:
               _context5.prev = 12;
@@ -195,29 +188,50 @@ module.exports = function () {
     };
   }());
 
-  this.Then('the last operation thrown error', (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee6() {
-    var queue;
-    return _regenerator2.default.wrap(function _callee6$(_context6) {
-      while (1) {
-        switch (_context6.prev = _context6.next) {
-          case 0:
-            _context6.next = 2;
-            return container.queue;
+  this.Then('"$queueName" has $consumerCount consumer', function () {
+    var _ref6 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee6(queueName, consumerCount) {
+      var queue, checkResult;
+      return _regenerator2.default.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              consumerCount = parseInt(consumerCount);
+              _context6.next = 3;
+              return container.queue;
 
-          case 2:
-            queue = _context6.sent;
+            case 3:
+              queue = _context6.sent;
 
-            (0, _chai.assert)(this.thrown === true, "Expected a thing to be thrown");
+              this.thrown = false;
+              _context6.prev = 5;
+              _context6.next = 8;
+              return queue.consumerCount(queueName);
 
-          case 4:
-          case 'end':
-            return _context6.stop();
+            case 8:
+              checkResult = _context6.sent;
+              return _context6.abrupt('return', (0, _chai.assert)(checkResult === consumerCount, "Expected checkResult to equal consumerCount"));
+
+            case 12:
+              _context6.prev = 12;
+              _context6.t0 = _context6['catch'](5);
+
+              console.log(_context6.t0);
+              this.thrown = true;
+
+            case 16:
+            case 'end':
+              return _context6.stop();
+          }
         }
-      }
-    }, _callee6, this);
-  })));
+      }, _callee6, this, [[5, 12]]);
+    }));
 
-  this.Then('the last operation didn\'t throw error', (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee7() {
+    return function (_x8, _x9) {
+      return _ref6.apply(this, arguments);
+    };
+  }());
+
+  this.Then('the last operation thrown error', (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee7() {
     var queue;
     return _regenerator2.default.wrap(function _callee7$(_context7) {
       while (1) {
@@ -229,7 +243,7 @@ module.exports = function () {
           case 2:
             queue = _context7.sent;
 
-            (0, _chai.assert)(this.thrown === false, "Expected nothing to be thrown");
+            (0, _chai.assert)(this.thrown === true, "Expected a thing to be thrown");
 
           case 4:
           case 'end':
@@ -238,4 +252,47 @@ module.exports = function () {
       }
     }, _callee7, this);
   })));
+
+  this.Then('the last operation didn\'t throw error', (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee8() {
+    var queue;
+    return _regenerator2.default.wrap(function _callee8$(_context8) {
+      while (1) {
+        switch (_context8.prev = _context8.next) {
+          case 0:
+            _context8.next = 2;
+            return container.queue;
+
+          case 2:
+            queue = _context8.sent;
+
+            (0, _chai.assert)(this.thrown === false, "Expected nothing to be thrown");
+
+          case 4:
+          case 'end':
+            return _context8.stop();
+        }
+      }
+    }, _callee8, this);
+  })));
+
+  this.Then('the consumer is called back with "$message"', function () {
+    var _ref9 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee9(message) {
+      return _regenerator2.default.wrap(function _callee9$(_context9) {
+        while (1) {
+          switch (_context9.prev = _context9.next) {
+            case 0:
+              (0, _chai.assert)(lastMessage === message, "Got the wrong message");
+
+            case 1:
+            case 'end':
+              return _context9.stop();
+          }
+        }
+      }, _callee9, this);
+    }));
+
+    return function (_x10) {
+      return _ref9.apply(this, arguments);
+    };
+  }());
 };

@@ -7,9 +7,13 @@ var queues = {};
 
 var ensureQueue = function ensureQueue(queueName) {
   return queues[queueName] || (queues[queueName] = {
-    thingsPassedToPublish: [],
-    thingsPassedToConsume: []
+    messages: [],
+    consumers: []
   });
+};
+
+var dispatchMessages = function dispatchMessages(queueName) {
+  return queues[queueName].consumers.length && queues[queueName].messages.forEach(queues[queueName].consumers[0]);
 };
 
 exports.default = function (config) {
@@ -17,21 +21,23 @@ exports.default = function (config) {
     removeIfExists: function removeIfExists(queueName) {
       delete queues[queueName];
     },
-    publish: function publish(queueName, noIdeaWhatThisArgumentIs) {
+    publish: function publish(queueName, message) {
       ensureQueue(queueName);
-      queues[queueName].thingsPassedToPublish.push(noIdeaWhatThisArgumentIs);
+      queues[queueName].messages.push(message);
+      dispatchMessages(queueName);
       return true;
     },
     messageCount: function messageCount(queueName) {
-      return queues[queueName].thingsPassedToPublish.length;
+      return queues[queueName].messages.length;
     },
-    consume: function consume(queueName, noIdeaWhatThisArgumentIs) {
+    consume: function consume(queueName, handler) {
       ensureQueue(queueName);
-      queues[queueName].thingsPassedToConsume.push(noIdeaWhatThisArgumentIs);
+      queues[queueName].consumers.push(handler);
+      dispatchMessages(queueName);
       return true;
     },
     consumerCount: function consumerCount(queueName) {
-      return queues[queueName].thingsPassedToConsume.length;
+      return queues[queueName].consumers.length;
     }
   };
 };
