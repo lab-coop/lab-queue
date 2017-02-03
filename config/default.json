@@ -1,0 +1,11 @@
+{
+  "queue": {
+    "url": "amqp://localhost",
+    "hearthbeat": 10,
+    "consume": {
+      "defaults": {
+        "prefetchCount": 1
+      }
+    }
+  }
+}

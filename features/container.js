@@ -1,11 +1,11 @@
-import di from 'lab-di';
-import config from 'lab-config';
-import configMemory from 'lab-config/implementations/memory';
+const di =  new (require('bottlejs'))();
 import queue from '../index';
 
-const container = di();
-container.registerModule(config, 'config');
-container.registerModule(configMemory, 'lab-config-memory');
-container.registerModule(queue, 'queue');
+const config = function () {
+  return require('config');
+};
 
-module.exports = container;
+di.service('config', config);
+di.service('queue', queue, 'config');
+
+module.exports = di.container;

@@ -23,7 +23,7 @@ module.exports = function () {
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return container.get('queue');
+              return container.queue;
 
             case 2:
               queue = _context.sent;
@@ -51,7 +51,7 @@ module.exports = function () {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return container.get('queue');
+              return container.queue;
 
             case 2:
               queue = _context2.sent;
@@ -84,7 +84,7 @@ module.exports = function () {
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.next = 2;
-              return container.get('queue');
+              return container.queue;
 
             case 2:
               queue = _context3.sent;
@@ -118,7 +118,7 @@ module.exports = function () {
             case 0:
               messageCount = parseInt(messageCount);
               _context4.next = 3;
-              return container.get('queue');
+              return container.queue;
 
             case 3:
               queue = _context4.sent;
@@ -161,7 +161,7 @@ module.exports = function () {
             case 0:
               consumerCount = parseInt(consumerCount);
               _context5.next = 3;
-              return container.get('queue');
+              return container.queue;
 
             case 3:
               queue = _context5.sent;
@@ -201,7 +201,7 @@ module.exports = function () {
         switch (_context6.prev = _context6.next) {
           case 0:
             _context6.next = 2;
-            return container.get('queue');
+            return container.queue;
 
           case 2:
             queue = _context6.sent;
@@ -223,7 +223,7 @@ module.exports = function () {
         switch (_context7.prev = _context7.next) {
           case 0:
             _context7.next = 2;
-            return container.get('queue');
+            return container.queue;
 
           case 2:
             queue = _context7.sent;

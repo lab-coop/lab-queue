@@ -64,9 +64,12 @@
   "dependencies": {
     "amqplib": "^0.5.1",
     "babel-runtime": "^6.20.0",
+    "bottlejs": "^1.5.0",
+    "config": "^1.25.1",
     "lab-config": "github:lab-coop/lab-config",
     "lab-di": "github:lab-coop/lab-di",
     "lodash": "^4.17.2",
-    "shortid": "^2.2.6"
+    "shortid": "^2.2.6",
+    "winston": "^2.3.1"
   }
 }
