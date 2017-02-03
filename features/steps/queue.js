@@ -2,6 +2,7 @@ import { assert } from 'chai';
 
 module.exports = function() {
   const container = this.container;
+  let lastMessage;
 
   this.Given('"$queueName" doesn\'t exist', async function (queueName) {
     const queue = await container.queue;
@@ -13,9 +14,16 @@ module.exports = function() {
     assert((await queue.publish(queueName, true)), "Expected publish to return truthy");
   });
 
+  this.When('the message "$message" is pushed to queue "$queueName"', async function (message, queueName) {
+    const queue = await container.queue;
+    assert((await queue.publish(queueName, message)), "Expected publish to return truthy");
+  });
+
   this.When('a consumer is attached to queue "$queueName"', async function (queueName) {
     const queue = await container.queue;
-    assert((await queue.consume(queueName, () => {})), "Expected consume to return truthy");
+    assert((await queue.consume(queueName, (message) => {
+      lastMessage = message
+    })), "Expected consume to return truthy");
   });
 
   this.When('"$queueName" contains $messageCount message', async function (queueName, messageCount) {
@@ -53,5 +61,9 @@ module.exports = function() {
     const queue = await container.queue;
     assert(this.thrown === false, "Expected nothing to be thrown");
   });
+
+  this.Then('the consumer is called back with "$message"', async function (message) {
+    assert(lastMessage === message, "Got the wrong message")
+  })
 
 };

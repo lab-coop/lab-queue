@@ -1,28 +1,33 @@
 const queues = {}
 
 const ensureQueue = (queueName) => queues[queueName] || (queues[queueName] = {
-  thingsPassedToPublish: [],
-  thingsPassedToConsume: [],
+  messages: [],
+  consumers: [],
 })
+
+const dispatchMessages = (queueName) => queues[queueName].consumers.length &&
+  queues[queueName].messages.forEach(queues[queueName].consumers[0])
 
 export default (config) => ({
   removeIfExists: (queueName) => {
     delete queues[queueName]
   },
-  publish: (queueName, noIdeaWhatThisArgumentIs) => {
+  publish: (queueName, message) => {
     ensureQueue(queueName)
-    queues[queueName].thingsPassedToPublish.push(noIdeaWhatThisArgumentIs)
+    queues[queueName].messages.push(message)
+    dispatchMessages(queueName)
     return true
   },
   messageCount: (queueName) => {
-    return queues[queueName].thingsPassedToPublish.length
+    return queues[queueName].messages.length
   },
-  consume: (queueName, noIdeaWhatThisArgumentIs) => {
+  consume: (queueName, handler) => {
     ensureQueue(queueName)
-    queues[queueName].thingsPassedToConsume.push(noIdeaWhatThisArgumentIs)
+    queues[queueName].consumers.push(handler)
+    dispatchMessages(queueName)
     return true
   },
   consumerCount: (queueName) => {
-    return queues[queueName].thingsPassedToConsume.length
+    return queues[queueName].consumers.length
   }
 })
