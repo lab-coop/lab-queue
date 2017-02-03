@@ -61,7 +61,7 @@ module.exports = function () {
 
             case 6:
               _context2.t1 = _context2.sent;
-              (0, _context2.t0)(_context2.t1);
+              (0, _context2.t0)(_context2.t1, "Expected publish to return truthy");
 
             case 8:
             case 'end':
@@ -94,7 +94,7 @@ module.exports = function () {
 
             case 6:
               _context3.t1 = _context3.sent;
-              (0, _context3.t0)(_context3.t1);
+              (0, _context3.t0)(_context3.t1, "Expected consume to return truthy");
 
             case 8:
             case 'end':
@@ -130,7 +130,7 @@ module.exports = function () {
 
             case 8:
               checkResult = _context4.sent;
-              return _context4.abrupt('return', (0, _chai.assert)(checkResult === messageCount));
+              return _context4.abrupt('return', (0, _chai.assert)(checkResult === messageCount, "Expected checkResult to equal messageCount"));
 
             case 12:
               _context4.prev = 12;
@@ -173,15 +173,16 @@ module.exports = function () {
 
             case 8:
               checkResult = _context5.sent;
-              return _context5.abrupt('return', (0, _chai.assert)(checkResult === consumerCount));
+              return _context5.abrupt('return', (0, _chai.assert)(checkResult === consumerCount, "Expected checkResult to equal consumerCount"));
 
             case 12:
               _context5.prev = 12;
               _context5.t0 = _context5['catch'](5);
 
+              console.log(_context5.t0);
               this.thrown = true;
 
-            case 15:
+            case 16:
             case 'end':
               return _context5.stop();
           }
@@ -206,7 +207,7 @@ module.exports = function () {
           case 2:
             queue = _context6.sent;
 
-            (0, _chai.assert)(this.thrown === true);
+            (0, _chai.assert)(this.thrown === true, "Expected a thing to be thrown");
 
           case 4:
           case 'end':
@@ -228,7 +229,7 @@ module.exports = function () {
           case 2:
             queue = _context7.sent;
 
-            (0, _chai.assert)(this.thrown === false);
+            (0, _chai.assert)(this.thrown === false, "Expected nothing to be thrown");
 
           case 4:
           case 'end':
