@@ -1,4 +1,5 @@
 {
+  "queueService": "ampq",
   "queue": {
     "url": "amqp://localhost",
     "hearthbeat": 10,

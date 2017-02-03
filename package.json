@@ -11,8 +11,8 @@
     "watch": "npm-watch",
     "units": "jest",
     "units-watch": "jest --watch",
-    "features": "node_modules/cucumber/bin/cucumber.js --compiler es6:babel-core/register",
-    "features-watch": "node_modules/nodemon/bin/nodemon.js node_modules/cucumber/bin/cucumber.js --compiler es6:babel-core/register",
+    "features": "NODE_ENV=test node_modules/cucumber/bin/cucumber.js --compiler es6:babel-core/register",
+    "features-watch": "NODE_ENV=test node_modules/nodemon/bin/nodemon.js node_modules/cucumber/bin/cucumber.js --compiler es6:babel-core/register",
     "dist": "node_modules/babel-cli/bin/babel.js . --out-dir dist --ignore dist,node_modules --presets es2015"
   },
   "watch": {
