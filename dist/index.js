@@ -5,6 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 exports.default = function (config) {
-  var implementationName = config.get('queueService') || 'ampq';
+  var implementationName = config.get('queueService') || 'amqp';
   return require('./implementations/' + implementationName).default(config);
 };
