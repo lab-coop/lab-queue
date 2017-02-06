@@ -34,12 +34,11 @@ afterEach((0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _c
   }, _callee, this);
 })));
 
-it('should add heartbeat parameter', function () {
-  expect((0, _connection.assertHeartBeatSupport)('amqp://localhost')).toBe('amqp://localhost');
-  expect((0, _connection.assertHeartBeatSupport)('amqp://localhost', false)).toBe('amqp://localhost');
-  expect((0, _connection.assertHeartBeatSupport)('amqp://localhost', true)).toBe('amqp://localhost');
-  expect((0, _connection.assertHeartBeatSupport)('amqp://localhost', 10)).toBe('amqp://localhost?heartbeat=10');
-  expect((0, _connection.assertHeartBeatSupport)('amqp://user:pass@localhost', 10)).toBe('amqp://user:pass@localhost?heartbeat=10');
+it('should add hearthbeat parameter', function () {
+  expect((0, _connection.assertHearthBeatSupport)('amqp://localhost')).toBe('amqp://localhost');
+  expect((0, _connection.assertHearthBeatSupport)('amqp://localhost', false)).toBe('amqp://localhost');
+  expect((0, _connection.assertHearthBeatSupport)('amqp://localhost', true)).toBe('amqp://localhost');
+  expect((0, _connection.assertHearthBeatSupport)('amqp://localhost', 10)).toBe('amqp://localhost?hearthbeat=10');
 });
 
 it('should create a connection', (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {
