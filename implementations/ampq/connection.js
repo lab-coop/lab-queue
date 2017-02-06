@@ -74,6 +74,9 @@ export function addUrlParameter(connectionUrl, name, value) {
   const urlObject = url.parse(connectionUrl);
   const pars =  urlObject.query ? urlObject.query.split('&') : [];
   pars.push(`${name}=${value}`);
+  if (urlObject.auth) {
+    urlObject.auth+= '@';
+  }
   return [
     urlObject.protocol,
     '//',

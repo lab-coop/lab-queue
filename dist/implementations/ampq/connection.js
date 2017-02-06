@@ -344,6 +344,9 @@ function addUrlParameter(connectionUrl, name, value) {
   var urlObject = url.parse(connectionUrl);
   var pars = urlObject.query ? urlObject.query.split('&') : [];
   pars.push(name + '=' + value);
+  if (urlObject.auth) {
+    urlObject.auth += '@';
+  }
   return [urlObject.protocol, '//', urlObject.auth, urlObject.host, urlObject.pathname, '?' + pars.join('&')].join('');
 }
 

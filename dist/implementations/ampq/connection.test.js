@@ -39,6 +39,7 @@ it('should add heartbeat parameter', function () {
   expect((0, _connection.assertHeartBeatSupport)('amqp://localhost', false)).toBe('amqp://localhost');
   expect((0, _connection.assertHeartBeatSupport)('amqp://localhost', true)).toBe('amqp://localhost');
   expect((0, _connection.assertHeartBeatSupport)('amqp://localhost', 10)).toBe('amqp://localhost?heartbeat=10');
+  expect((0, _connection.assertHeartBeatSupport)('amqp://user:pass@localhost', 10)).toBe('amqp://user:pass@localhost?heartbeat=10');
 });
 
 it('should create a connection', (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2() {

@@ -24,6 +24,7 @@ it('should add heartbeat parameter', () => {
   expect(assertHeartBeatSupport('amqp://localhost', false)).toBe('amqp://localhost');
   expect(assertHeartBeatSupport('amqp://localhost', true)).toBe('amqp://localhost');
   expect(assertHeartBeatSupport('amqp://localhost', 10)).toBe('amqp://localhost?heartbeat=10');
+  expect(assertHeartBeatSupport('amqp://user:pass@localhost', 10)).toBe('amqp://user:pass@localhost?heartbeat=10');
 });
 
 it('should create a connection', async function() {
