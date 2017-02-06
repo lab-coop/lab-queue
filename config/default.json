@@ -2,7 +2,7 @@
   "queueService": "ampq",
   "queue": {
     "url": "amqp://localhost",
-    "hearthbeat": 10,
+    "heartbeat": 10,
     "consume": {
       "defaults": {
         "prefetchCount": 1

@@ -30,7 +30,7 @@ var getConnection = exports.getConnection = function () {
                     while (1) {
                       switch (_context.prev = _context.next) {
                         case 0:
-                          connectionUrl = assertHearthBeatSupport(config.url, config.hearthbeat);
+                          connectionUrl = assertHeartBeatSupport(config.url, config.heartbeat);
                           connect = connectFactory(connectionUrl);
                           storeConnection = storeConnectionFactory(connectionKey);
                           connectAndStore = connectAndStoreFactory(connect, storeConnection);
@@ -210,7 +210,7 @@ exports.handleConnectionError = handleConnectionError;
 exports.connectAndStoreFactory = connectAndStoreFactory;
 exports.storeConnectionFactory = storeConnectionFactory;
 exports.connectFactory = connectFactory;
-exports.assertHearthBeatSupport = assertHearthBeatSupport;
+exports.assertHeartBeatSupport = assertHeartBeatSupport;
 exports.addUrlParameter = addUrlParameter;
 exports.getChannels = getChannels;
 exports.handleChannelError = handleChannelError;
@@ -332,9 +332,9 @@ function connectFactory(connectionUrl) {
   }));
 }
 
-function assertHearthBeatSupport(connectionUrl, hearthBeatSeconds) {
-  if ((0, _lodash.isInteger)(hearthBeatSeconds)) {
-    return addUrlParameter(connectionUrl, 'hearthbeat', hearthBeatSeconds);
+function assertHeartBeatSupport(connectionUrl, heartBeatSeconds) {
+  if ((0, _lodash.isInteger)(heartBeatSeconds)) {
+    return addUrlParameter(connectionUrl, 'heartbeat', heartBeatSeconds);
   } else {
     return connectionUrl;
   }

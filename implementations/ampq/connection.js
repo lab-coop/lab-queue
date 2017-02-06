@@ -9,7 +9,7 @@ export async function getConnection(config) {
   const connectionKey = getConnectionKey(config);
   if (!connections.hasOwnProperty(connectionKey)) {
     connections[connectionKey] = new Promise(async function(resolve, reject) {
-      const connectionUrl = assertHearthBeatSupport(config.url, config.hearthbeat);
+      const connectionUrl = assertHeartBeatSupport(config.url, config.heartbeat);
       const connect = connectFactory(connectionUrl);
       const storeConnection = storeConnectionFactory(connectionKey);
       const connectAndStore = connectAndStoreFactory(connect, storeConnection);
@@ -62,9 +62,9 @@ export function connectFactory(connectionUrl) {
   }
 }
 
-export function assertHearthBeatSupport(connectionUrl, hearthBeatSeconds) {
-  if (isInteger(hearthBeatSeconds)) {
-    return addUrlParameter(connectionUrl, 'hearthbeat', hearthBeatSeconds);
+export function assertHeartBeatSupport(connectionUrl, heartBeatSeconds) {
+  if (isInteger(heartBeatSeconds)) {
+    return addUrlParameter(connectionUrl, 'heartbeat', heartBeatSeconds);
   } else {
     return connectionUrl;
   }
