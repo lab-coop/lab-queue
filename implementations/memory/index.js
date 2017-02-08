@@ -5,8 +5,13 @@ const ensureQueue = (queueName) => queues[queueName] || (queues[queueName] = {
   consumers: [],
 })
 
-const dispatchMessages = (queueName) => queues[queueName].consumers.length &&
-  queues[queueName].messages.forEach(queues[queueName].consumers[0])
+const dispatchMessages = (queueName) => {
+  if(queues[queueName].consumers.length) {
+    queues[queueName].messages.forEach(queues[queueName].consumers[0])
+    queues[queueName].messages = []
+  }
+
+}
 
 export default (config) => ({
   removeIfExists: async (queueName) => {

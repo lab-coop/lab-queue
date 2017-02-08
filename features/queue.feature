@@ -39,3 +39,10 @@ Feature: Queue
     When a consumer is attached to queue "test-queue"
     When the message "message" is pushed to queue "test-queue"
     Then the consumer is called back with "message"
+
+  Scenario: Pull and push and push
+    Given "test-queue" doesn't exist
+    When a consumer is attached to queue "test-queue"
+    When the message "message" is pushed to queue "test-queue"
+    When the message "message" is pushed to queue "test-queue"
+    Then the consumer is called back "2" times

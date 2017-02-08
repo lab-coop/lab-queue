@@ -3,6 +3,7 @@ import { assert } from 'chai';
 module.exports = function() {
   const container = this.container;
   let lastMessage;
+  let lastConsumerCallCount;
 
   this.Given('"$queueName" doesn\'t exist', async function (queueName) {
     const queue = await container.queue;
@@ -21,8 +22,10 @@ module.exports = function() {
 
   this.When('a consumer is attached to queue "$queueName"', async function (queueName) {
     const queue = await container.queue;
+    lastConsumerCallCount = 0
     assert((await queue.consume(queueName, (message) => {
       lastMessage = message
+      lastConsumerCallCount += 1
     })), "Expected consume to return truthy");
   });
 
@@ -64,6 +67,10 @@ module.exports = function() {
 
   this.Then('the consumer is called back with "$message"', async function (message) {
     assert(lastMessage === message, "Got the wrong message")
+  })
+
+  this.Then('the consumer is called back "$times" times', async function (times) {
+    assert(parseInt(lastConsumerCallCount) === parseInt(times), `Expected consumer to be called ${times} times, but it was called ${lastConsumerCallCount} times`)
   })
 
 };
