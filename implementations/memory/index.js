@@ -9,25 +9,25 @@ const dispatchMessages = (queueName) => queues[queueName].consumers.length &&
   queues[queueName].messages.forEach(queues[queueName].consumers[0])
 
 export default (config) => ({
-  removeIfExists: (queueName) => {
+  removeIfExists: async (queueName) => {
     delete queues[queueName]
   },
-  publish: (queueName, message) => {
+  publish: async (queueName, message) => {
     ensureQueue(queueName)
     queues[queueName].messages.push(message)
     dispatchMessages(queueName)
     return true
   },
-  messageCount: (queueName) => {
+  messageCount: async (queueName) => {
     return queues[queueName].messages.length
   },
-  consume: (queueName, handler) => {
+  consume: async (queueName, handler) => {
     ensureQueue(queueName)
     queues[queueName].consumers.push(handler)
     dispatchMessages(queueName)
     return true
   },
-  consumerCount: (queueName) => {
+  consumerCount: async (queueName) => {
     return queues[queueName].consumers.length
   }
 })
