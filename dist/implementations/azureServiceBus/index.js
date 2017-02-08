@@ -28,37 +28,39 @@ exports.default = function (config) {
   var serviceBus = _azure2.default.createServiceBusService(serviceBusConnectionString);
 
   var sendMessageAsync = _bluebird2.default.promisify(serviceBus.sendQueueMessage, { context: serviceBus });
-
+  var receiveOneAsync = _bluebird2.default.promisify(serviceBus.receiveQueueMessage, { context: serviceBus });
   var deleteMessageAsync = _bluebird2.default.promisify(serviceBus.deleteMessage, { context: serviceBus });
-  var deleteMessageAsyncCurried = function deleteMessageAsyncCurried(lockedMessage) {
-    return function () {
-      return deleteMessageAsync(lockedMessage);
-    };
-  };
 
-  var consume = function consume(queueName, handler) {
-    serviceBus.receiveQueueMessage(queueName, { isPeekLock: true }, function (error, lockedMessage) {
-      if (error) throw error;
-      var deleteMessage = deleteMessageAsyncCurried(lockedMessage);
-      var payload = JSON.parse(lockedMessage.body);
-      handler(payload).then(deleteMessage).catch(function (err) {
-        throw err;
-      });
-    });
-  };
-
-  var publish = function () {
-    var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(queueName, payload) {
-      var message;
+  var consume = function () {
+    var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(queueName, handler) {
+      var lockedMessage, payload;
       return _regenerator2.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              message = { body: JSON.stringify(payload) };
+              if (!true) {
+                _context.next = 11;
+                break;
+              }
+
               _context.next = 3;
-              return sendMessageAsync(queueName, message);
+              return receiveOneAsync(queueName, { isPeekLock: true });
 
             case 3:
+              lockedMessage = _context.sent;
+              payload = JSON.parse(lockedMessage.body);
+              _context.next = 7;
+              return handler(payload);
+
+            case 7:
+              _context.next = 9;
+              return deleteMessageAsync(lockedMessage);
+
+            case 9:
+              _context.next = 0;
+              break;
+
+            case 11:
             case 'end':
               return _context.stop();
           }
@@ -66,8 +68,32 @@ exports.default = function (config) {
       }, _callee, undefined);
     }));
 
-    return function publish(_x, _x2) {
+    return function consume(_x, _x2) {
       return _ref.apply(this, arguments);
+    };
+  }();
+
+  var publish = function () {
+    var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(queueName, payload) {
+      var message;
+      return _regenerator2.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              message = { body: JSON.stringify(payload) };
+              _context2.next = 3;
+              return sendMessageAsync(queueName, message);
+
+            case 3:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, _callee2, undefined);
+    }));
+
+    return function publish(_x3, _x4) {
+      return _ref2.apply(this, arguments);
     };
   }();
 

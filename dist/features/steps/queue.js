@@ -15,6 +15,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 module.exports = function () {
   var container = this.container;
   var lastMessage = void 0;
+  var lastConsumerCallCount = void 0;
 
   this.Given('"$queueName" doesn\'t exist', function () {
     var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(queueName) {
@@ -122,17 +123,20 @@ module.exports = function () {
 
             case 2:
               queue = _context4.sent;
+
+              lastConsumerCallCount = 0;
               _context4.t0 = _chai.assert;
-              _context4.next = 6;
+              _context4.next = 7;
               return queue.consume(queueName, function (message) {
                 lastMessage = message;
+                lastConsumerCallCount += 1;
               });
 
-            case 6:
+            case 7:
               _context4.t1 = _context4.sent;
               (0, _context4.t0)(_context4.t1, "Expected consume to return truthy");
 
-            case 8:
+            case 9:
             case 'end':
               return _context4.stop();
           }
@@ -293,6 +297,27 @@ module.exports = function () {
 
     return function (_x10) {
       return _ref9.apply(this, arguments);
+    };
+  }());
+
+  this.Then('the consumer is called back "$times" times', function () {
+    var _ref10 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee10(times) {
+      return _regenerator2.default.wrap(function _callee10$(_context10) {
+        while (1) {
+          switch (_context10.prev = _context10.next) {
+            case 0:
+              (0, _chai.assert)(parseInt(lastConsumerCallCount) === parseInt(times), 'Expected consumer to be called ' + times + ' times, but it was called ' + lastConsumerCallCount + ' times');
+
+            case 1:
+            case 'end':
+              return _context10.stop();
+          }
+        }
+      }, _callee10, this);
+    }));
+
+    return function (_x11) {
+      return _ref10.apply(this, arguments);
     };
   }());
 };
