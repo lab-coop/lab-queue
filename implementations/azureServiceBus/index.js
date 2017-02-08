@@ -8,19 +8,16 @@ export default (config) => {
   const serviceBus = azure.createServiceBusService(serviceBusConnectionString)
 
   const sendMessageAsync = bluebird.promisify(serviceBus.sendQueueMessage, {context: serviceBus})
-
+  const receiveOneAsync = bluebird.promisify(serviceBus.receiveQueueMessage, {context: serviceBus})
   const deleteMessageAsync = bluebird.promisify(serviceBus.deleteMessage, {context: serviceBus})
-  const deleteMessageAsyncCurried = (lockedMessage) => () => deleteMessageAsync(lockedMessage)
 
-  const consume = (queueName, handler) => {
-    serviceBus.receiveQueueMessage(queueName, { isPeekLock: true }, function(error, lockedMessage) {
-      if(error) throw error
-      const deleteMessage = deleteMessageAsyncCurried(lockedMessage)
+  const consume = async (queueName, handler) => {
+    while(true) {
+      const lockedMessage = await receiveOneAsync(queueName, { isPeekLock: true })
       const payload = JSON.parse(lockedMessage.body)
-      handler(payload)
-        .then(deleteMessage)
-        .catch((err) => {throw err})
-    });
+      await handler(payload)
+      await deleteMessageAsync(lockedMessage)
+    }
   }
 
   const publish = async (queueName, payload) => {
