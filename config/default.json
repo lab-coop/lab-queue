@@ -1,6 +1,6 @@
 {
-  "queueService": "amqp091",
   "queue": {
+    "type": "amqp091",
     "url": "amqp://localhost",
     "heartbeat": 10,
     "consume": {

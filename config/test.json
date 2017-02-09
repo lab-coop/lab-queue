@@ -1,3 +1,5 @@
 {
-  "queueService": "memory"
+  "queue": {
+    "type": "memory"
+  }
 }
