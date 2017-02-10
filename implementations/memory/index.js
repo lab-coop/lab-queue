@@ -59,7 +59,7 @@ export default function memoryQueueService(config) {
     return true;
   }
 
-  function consume(queueName, consumer) {
+  async function consume(queueName, consumer) {
     ensureQueue(queueName);
     const consumerId = addConsumer(queueName, consumer);
     process.nextTick(() => dispatchMessages(queueName));
