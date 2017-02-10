@@ -12,18 +12,18 @@ export default (config) => {
   const deleteMessageAsync = bluebird.promisify(serviceBus.deleteMessage, {context: serviceBus})
 
   const consume = async (queueName, handler) => {
-    while(true) {
+    while (true) {
       const lockedMessage = await receiveOneAsync(queueName, { isPeekLock: true })
-      const payload = JSON.parse(lockedMessage.body)
-      await handler(payload)
+      const payload = JSON.parse(lockedMessage.body);
+      await handler(payload);
       await deleteMessageAsync(lockedMessage)
     }
-  }
+  };
 
   const publish = async (queueName, payload) => {
-    const message = { body: JSON.stringify(payload) }
+    const message = { body: JSON.stringify(payload) };
     await sendMessageAsync(queueName, message)
-  }
+  };
 
   return Object.freeze({
     consume,
