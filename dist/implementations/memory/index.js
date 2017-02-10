@@ -14,8 +14,6 @@ var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
 exports.default = memoryQueueService;
 
-var _lodash = require('lodash');
-
 var _rr = require('rr');
 
 var _rr2 = _interopRequireDefault(_rr);
@@ -197,34 +195,3 @@ function memoryQueueService(config) {
     return Object.values(queues[queueName].consumers).length;
   }
 }
-
-// export default (config) => ({
-//   removeIfExists: async (queueName) => {
-//     delete queues[queueName]
-//   },
-//   publish: async (queueName, message) => {
-//     ensureQueue(queueName)
-//     queues[queueName].messages.push(message)
-//     dispatchMessages(queueName)
-//     return true;
-//   },
-//   messageCount: async (queueName) => {
-//     return queues[queueName].messages.length
-//   },
-//   consume: async (queueName, handler) => {
-//     ensureQueue(queueName)
-//     queues[queueName].consumers.push(handler)
-//     return () => {
-//       console.log('CANCEL CALLED')
-//       queues[queueName].consumers = remove(queues[queueName].consumers, consumeHandler => {
-//         console.log(consumeHandler);
-//         console.log(handler);
-//         return consumeHandler == handler;
-//       });
-//       // console.log(queues[queueName].consumers);
-//     };
-//   },
-//   consumerCount: async (queueName) => {
-//     return queues[queueName].consumers.length
-//   }
-// })
