@@ -46,3 +46,9 @@ Feature: Queue
     When the message "message" is pushed to queue "test-queue"
     When the message "message" is pushed to queue "test-queue"
     Then the consumer is called back "2" times
+
+  Scenario: The consuming method returns a cancel function before calling the consumer callback
+    Given "test-queue" doesn't exist
+    When the message "message" is pushed to queue "test-queue"
+    When a consumer is attached to queue "test-queue" and immediately cancelled
+    Then the consumer is called back "0" times

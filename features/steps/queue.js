@@ -1,9 +1,12 @@
-import { assert } from 'chai';
+import chai from 'chai';
+import spies from 'chai-spies';
+chai.use(spies);
+const assert = chai.assert;
+const expect = chai.expect;
 
 module.exports = function() {
   const container = this.container;
-  let lastMessage;
-  let lastConsumerCallCount;
+  const context = this.context;
 
   this.Given('"$queueName" doesn\'t exist', async function (queueName) {
     const queue = await container.queue;
@@ -22,11 +25,17 @@ module.exports = function() {
 
   this.When('a consumer is attached to queue "$queueName"', async function (queueName) {
     const queue = await container.queue;
-    lastConsumerCallCount = 0
-    assert((await queue.consume(queueName, (message) => {
-      lastMessage = message
-      lastConsumerCallCount += 1
-    })), "Expected consume to return truthy");
+    context.consumerCallback = chai.spy();
+    context.cancelConsume = await queue.consume(queueName,  context.consumerCallback);
+    expect(context.cancelConsume).to.be.a('function');
+  });
+
+  this.When('a consumer is attached to queue "$queueName" and immediately cancelled', async function (queueName) {
+    const queue = await container.queue;
+    context.consumerCallback = chai.spy();
+    context.cancelConsume = await queue.consume(queueName,  context.consumerCallback);
+    expect(context.cancelConsume).to.be.a('function');
+    await context.cancelConsume();
   });
 
   this.When('"$queueName" contains $messageCount message', async function (queueName, messageCount) {
@@ -66,11 +75,11 @@ module.exports = function() {
   });
 
   this.Then('the consumer is called back with "$message"', async function (message) {
-    assert(lastMessage === message, "Got the wrong message")
-  })
+    expect(context.consumerCallback).to.be.called.with(message);
+  });
 
   this.Then('the consumer is called back "$times" times', async function (times) {
-    assert(parseInt(lastConsumerCallCount) === parseInt(times), `Expected consumer to be called ${times} times, but it was called ${lastConsumerCallCount} times`)
-  })
+    expect(context.consumerCallback).to.be.called.exactly(parseInt(times));
+  });
 
 };
