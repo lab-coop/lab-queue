@@ -16,7 +16,7 @@ import {
 import shortid from 'shortid';
 import { pick } from 'lodash';
 
-function queueService(config) {
+function queueService(config, logger) {
 
   return Object.freeze({
     getChannelAssert,

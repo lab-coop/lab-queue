@@ -2,7 +2,7 @@ import azure from 'azure';
 import bluebird from 'bluebird';
 import shortid from 'shortid';
 
-export default (config) => {
+export default (config, logger) => {
 
   const queues = {};
   let consumersChanged = false;

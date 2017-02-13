@@ -26,7 +26,7 @@ var _shortid2 = _interopRequireDefault(_shortid);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = function (config) {
+exports.default = function (config, logger) {
   var createQueueOperation = function () {
     var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(operation) {
       return _regenerator2.default.wrap(function _callee$(_context) {

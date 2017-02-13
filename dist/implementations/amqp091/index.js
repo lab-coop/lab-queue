@@ -26,7 +26,7 @@ var _lodash = require('lodash');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function queueService(config) {
+function queueService(config, logger) {
   var consume = function () {
     var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(queueName, messageHandler) {
       var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : config.get('queue.consume.defaults');
