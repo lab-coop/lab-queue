@@ -63,8 +63,9 @@ export default function memoryQueueService(config, logger) {
   async function consume(queueName, consumer) {
     getChannelAssert(queueName);
     const consumerId = addConsumer(queueName, consumer);
-    process.nextTick(() => dispatchMessages(queueName, createRemoveConsumer(queueName, consumerId)));
-    return createRemoveConsumer(queueName, consumerId);
+    const removeConsumer = createRemoveConsumer(queueName, consumerId);
+    process.nextTick(() => dispatchMessages(queueName, removeConsumer));
+    return removeConsumer;
   }
 
   function addConsumer(queueName, consumer) {
@@ -99,7 +100,7 @@ export default function memoryQueueService(config, logger) {
     try {
       await consumer(message, createNack(queueName, message));
     } catch (err) {
-      logger.error('Consumer is removed because it has thrown error: ' + err);
+      logger.error('Consumer is removed because it has thrown error: ' + JSON.stringify(err));
       removeConsumer();
     }
   }

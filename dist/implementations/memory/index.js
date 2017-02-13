@@ -27,20 +27,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function memoryQueueService(config, logger) {
   var consume = function () {
     var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(queueName, consumer) {
-      var consumerId;
+      var consumerId, removeConsumer;
       return _regenerator2.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               getChannelAssert(queueName);
               consumerId = addConsumer(queueName, consumer);
+              removeConsumer = createRemoveConsumer(queueName, consumerId);
 
               process.nextTick(function () {
-                return dispatchMessages(queueName, createRemoveConsumer(queueName, consumerId));
+                return dispatchMessages(queueName, removeConsumer);
               });
-              return _context.abrupt('return', createRemoveConsumer(queueName, consumerId));
+              return _context.abrupt('return', removeConsumer);
 
-            case 4:
+            case 5:
             case 'end':
               return _context.stop();
           }
@@ -104,7 +105,7 @@ function memoryQueueService(config, logger) {
               _context3.prev = 6;
               _context3.t0 = _context3['catch'](1);
 
-              logger.error('Consumer is removed because it has thrown error: ' + _context3.t0);
+              logger.error('Consumer is removed because it has thrown error: ' + JSON.stringify(_context3.t0));
               removeConsumer();
 
             case 10:
