@@ -1,7 +1,7 @@
 {
   "name": "lab-queue",
-  "version": "1.1.0",
-  "description": "",
+  "version": "1.1.1",
+  "description": "General queue provider at Lab.Coop",
   "main": "dist/index",
   "engines": {
     "node": ">=6.9.1"
@@ -73,8 +73,8 @@
     "lab-config": "github:lab-coop/lab-config",
     "lab-di": "github:lab-coop/lab-di",
     "lodash": "^4.17.2",
+    "rr": "^0.1.0",
     "shortid": "^2.2.6",
-    "winston": "^2.3.1",
-    "rr": "^0.1.0"
+    "winston": "^2.3.1"
   }
 }
