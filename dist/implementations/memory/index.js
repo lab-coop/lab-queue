@@ -24,26 +24,23 @@ var _shortid2 = _interopRequireDefault(_shortid);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function memoryQueueService(config) {
-  var dispatchMessages = function () {
-    var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(queueName) {
+function memoryQueueService(config, logger) {
+  var consume = function () {
+    var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(queueName, consumer) {
+      var consumerId;
       return _regenerator2.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!(consumerCount(queueName) && messageCount(queueName))) {
-                _context.next = 5;
-                break;
-              }
+              getChannelAssert(queueName);
+              consumerId = addConsumer(queueName, consumer);
 
-              _context.next = 3;
-              return dispatchOneMessage(queueName, chooseConsumer(queueName));
+              process.nextTick(function () {
+                return dispatchMessages(queueName, createRemoveConsumer(queueName, consumerId));
+              });
+              return _context.abrupt('return', createRemoveConsumer(queueName, consumerId));
 
-            case 3:
-              _context.next = 0;
-              break;
-
-            case 5:
+            case 4:
             case 'end':
               return _context.stop();
           }
@@ -51,43 +48,75 @@ function memoryQueueService(config) {
       }, _callee, this);
     }));
 
-    return function dispatchMessages(_x) {
+    return function consume(_x, _x2) {
       return _ref.apply(this, arguments);
     };
   }();
 
-  var dispatchOneMessage = function () {
-    var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(queueName, consumer) {
-      var message;
+  var dispatchMessages = function () {
+    var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(queueName, removeConsumer) {
       return _regenerator2.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              message = getFirstMessage(queueName);
-              _context2.prev = 1;
-              _context2.next = 4;
-              return consumer(message);
+              if (!(consumerCount(queueName) && messageCount(queueName))) {
+                _context2.next = 5;
+                break;
+              }
 
-            case 4:
-              _context2.next = 9;
+              _context2.next = 3;
+              return dispatchOneMessage(queueName, chooseConsumer(queueName), removeConsumer);
+
+            case 3:
+              _context2.next = 0;
               break;
 
-            case 6:
-              _context2.prev = 6;
-              _context2.t0 = _context2['catch'](1);
-
-              queues[queueName].messages.push(message);
-
-            case 9:
+            case 5:
             case 'end':
               return _context2.stop();
           }
         }
-      }, _callee2, this, [[1, 6]]);
+      }, _callee2, this);
     }));
 
-    return function dispatchOneMessage(_x2, _x3) {
+    return function dispatchMessages(_x3, _x4) {
       return _ref2.apply(this, arguments);
+    };
+  }();
+
+  var dispatchOneMessage = function () {
+    var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(queueName, consumer, removeConsumer) {
+      var message;
+      return _regenerator2.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              message = getFirstMessage(queueName);
+              _context3.prev = 1;
+              _context3.next = 4;
+              return consumer(message, createNack(queueName, message));
+
+            case 4:
+              _context3.next = 10;
+              break;
+
+            case 6:
+              _context3.prev = 6;
+              _context3.t0 = _context3['catch'](1);
+
+              logger.error('Consumer is removed because it has thrown error: ' + _context3.t0);
+              removeConsumer();
+
+            case 10:
+            case 'end':
+              return _context3.stop();
+          }
+        }
+      }, _callee3, this, [[1, 6]]);
+    }));
+
+    return function dispatchOneMessage(_x5, _x6, _x7) {
+      return _ref3.apply(this, arguments);
     };
   }();
 
@@ -95,6 +124,7 @@ function memoryQueueService(config) {
   var consumersChanged = false;
 
   return Object.freeze({
+    getChannelAssert: getChannelAssert,
     consume: consume,
     publish: publish,
     exists: exists,
@@ -106,7 +136,7 @@ function memoryQueueService(config) {
     consumerCount: consumerCount
   });
 
-  function ensureQueue(queueName) {
+  function getChannelAssert(queueName) {
     if (!queues.hasOwnProperty(queueName)) {
       queues[queueName] = {
         messages: [],
@@ -141,23 +171,12 @@ function memoryQueueService(config) {
   }
 
   function publish(queueName, message) {
-    ensureQueue(queueName);
+    getChannelAssert(queueName);
     pushMessage(queueName, message);
     process.nextTick(function () {
       return dispatchMessages(queueName);
     });
     return true;
-  }
-
-  function consume(queueName, consumer) {
-    ensureQueue(queueName);
-    var consumerId = addConsumer(queueName, consumer);
-    process.nextTick(function () {
-      return dispatchMessages(queueName);
-    });
-    return function () {
-      return removeConsumer(queueName, consumerId);
-    };
   }
 
   function addConsumer(queueName, consumer) {
@@ -167,9 +186,11 @@ function memoryQueueService(config) {
     return consumerId;
   }
 
-  function removeConsumer(queueName, consumerId) {
-    delete queues[queueName].consumers[consumerId];
-    consumersChanged = true;
+  function createRemoveConsumer(queueName, consumerId) {
+    return function () {
+      delete queues[queueName].consumers[consumerId];
+      consumersChanged = true;
+    };
   }
 
   function chooseConsumer(queueName) {
@@ -177,6 +198,12 @@ function memoryQueueService(config) {
       queues[queueName].consumersArray = Object.values(queues[queueName].consumers);
     }
     return (0, _rr2.default)(queues[queueName].consumersArray);
+  }
+
+  function createNack(queueName, message) {
+    return function () {
+      queues[queueName].messages.push(message);
+    };
   }
 
   function getFirstMessage(queueName) {

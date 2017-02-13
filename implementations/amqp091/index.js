@@ -7,17 +7,25 @@ import {
   punishNonExistentQueue,
   runQueueOperation,
 } from './connection';
+
+import {
+  addCancelConsuming,
+  runAllCancelConsuming
+} from './helpers';
+
 import shortid from 'shortid';
 import { pick } from 'lodash';
 
 function queueService(config) {
 
   return Object.freeze({
+    getChannelAssert,
     consume,
     publish,
     exists,
     remove,
     removeIfExists,
+    cancelAllConsuming,
     purge,
     purgeIfExists,
     messageCount,
@@ -30,7 +38,9 @@ function queueService(config) {
     const consumerOptions = pick(options, ['noLocal', 'noAck', 'exclusive', 'priority', 'arguments']);
     consumerOptions.consumerTag = shortid.generate();
     channel.consume(queueName, handleMessage(messageHandler, ackFactory(channel), nackFactory(channel)), consumerOptions);
-    return cancelConsumeFactory(channel, consumerOptions.consumerTag);
+    const cancelConsuming = cancelConsumeFactory(channel, consumerOptions.consumerTag);
+    addCancelConsuming(queueName, cancelConsuming);
+    return cancelConsuming;
   }
 
   async function publish(queueName, message) {
@@ -63,12 +73,18 @@ function queueService(config) {
   }
 
   async function remove(queueName) {
+    await runAllCancelConsuming(queueName);
     const channel = await getChannel(queueName);
     return removeQueueFactory(queueName)(channel);
   }
 
-  function removeIfExists(queueName) {
+  async function removeIfExists(queueName) {
+    await runAllCancelConsuming(queueName);
     return safeQueueOperation(queueName, removeQueueFactory(queueName));
+  }
+
+  async function cancelAllConsuming(queueName) {
+    await runAllCancelConsuming(queueName);
   }
 
   function removeQueueFactory(queueName) {

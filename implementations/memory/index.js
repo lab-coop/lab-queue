@@ -1,12 +1,13 @@
 import rr from 'rr';
 import shortid from 'shortid';
 
-export default function memoryQueueService(config) {
+export default function memoryQueueService(config, logger) {
 
   const queues = {};
   let consumersChanged = false;
 
   return Object.freeze({
+    getChannelAssert,
     consume,
     publish,
     exists,
@@ -18,7 +19,7 @@ export default function memoryQueueService(config) {
     consumerCount
   });
 
-  function ensureQueue(queueName) {
+  function getChannelAssert(queueName) {
     if (!queues.hasOwnProperty(queueName)) {
       queues[queueName] = {
         messages: [],
@@ -53,17 +54,17 @@ export default function memoryQueueService(config) {
   }
 
   function publish(queueName, message) {
-    ensureQueue(queueName);
+    getChannelAssert(queueName);
     pushMessage(queueName, message);
     process.nextTick(() => dispatchMessages(queueName));
     return true;
   }
 
   async function consume(queueName, consumer) {
-    ensureQueue(queueName);
+    getChannelAssert(queueName);
     const consumerId = addConsumer(queueName, consumer);
-    process.nextTick(() => dispatchMessages(queueName));
-    return () => removeConsumer(queueName, consumerId);
+    process.nextTick(() => dispatchMessages(queueName, createRemoveConsumer(queueName, consumerId)));
+    return createRemoveConsumer(queueName, consumerId);
   }
 
   function addConsumer(queueName, consumer) {
@@ -73,14 +74,16 @@ export default function memoryQueueService(config) {
     return consumerId;
   }
 
-  function removeConsumer(queueName, consumerId) {
-    delete queues[queueName].consumers[consumerId];
-    consumersChanged = true;
+  function createRemoveConsumer(queueName, consumerId) {
+    return () => {
+      delete queues[queueName].consumers[consumerId];
+      consumersChanged = true;
+    };
   }
 
-  async function dispatchMessages(queueName) {
+  async function dispatchMessages(queueName, removeConsumer) {
     while (consumerCount(queueName) && messageCount(queueName)) {
-      await dispatchOneMessage(queueName, chooseConsumer(queueName));
+      await dispatchOneMessage(queueName, chooseConsumer(queueName), removeConsumer);
     }
   }
 
@@ -91,11 +94,18 @@ export default function memoryQueueService(config) {
     return rr(queues[queueName].consumersArray);
   }
 
-  async function dispatchOneMessage(queueName, consumer) {
+  async function dispatchOneMessage(queueName, consumer, removeConsumer) {
     const message = getFirstMessage(queueName);
     try {
-      await consumer(message);
+      await consumer(message, createNack(queueName, message));
     } catch (err) {
+      logger.error('Consumer is removed because it has thrown error: ' + err);
+      removeConsumer();
+    }
+  }
+
+  function createNack(queueName, message) {
+    return () => {
       queues[queueName].messages.push(message);
     }
   }
