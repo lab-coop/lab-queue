@@ -1,3 +1,9 @@
-features
+features/
+implementations/
+dist/features/
 .babelrc
 .gitignore
+index.js
+npm-debug.log
+yarn-error.log
+.idea
