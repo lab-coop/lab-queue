@@ -101,11 +101,11 @@ export default (config, logger) => {
   }
 
   async function consumerCount(queueName) {
-
+    throw new Error('Not implemented');
   }
 
-  async function consumerCount(queueName) {
-
+  async function messageCount(queueName) {
+    throw new Error('Not implemented');
   }
 
 }
