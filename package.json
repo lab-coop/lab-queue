@@ -13,7 +13,8 @@
     "units-watch": "jest --watch",
     "features": "NODE_ENV=test node_modules/cucumber/bin/cucumber.js --compiler es6:babel-core/register",
     "features-watch": "NODE_ENV=test node_modules/nodemon/bin/nodemon.js node_modules/cucumber/bin/cucumber.js --compiler es6:babel-core/register",
-    "dist": "node_modules/babel-cli/bin/babel.js . --out-dir dist --ignore dist,node_modules --presets es2015"
+    "dist": "node_modules/babel-cli/bin/babel.js . --out-dir dist --ignore dist,node_modules --presets es2015",
+    "release": "rm -rf dist && npm run dist && npm publish dist"
   },
   "watch": {
     "features": {
