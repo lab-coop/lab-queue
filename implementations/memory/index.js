@@ -100,7 +100,8 @@ export default function memoryQueueService(config, logger) {
     try {
       await consumer(message, createNack(queueName, message));
     } catch (err) {
-      logger.error('Consumer is removed because it has thrown error: ' + JSON.stringify(err));
+      logger.error('Consumer is removed because it has thrown error:');
+      logger.error(err)
       removeConsumer();
     }
   }
