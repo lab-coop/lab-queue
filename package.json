@@ -15,7 +15,7 @@
     "features-watch": "NODE_ENV=test node_modules/nodemon/bin/nodemon.js node_modules/cucumber/bin/cucumber.js --compiler es6:babel-core/register",
     "dist": "node_modules/babel-cli/bin/babel.js . --out-dir dist --ignore dist,node_modules --presets es2015",
     "prepublish": "cp package.json dist/",
-    "release": "npm version patch && rm -rf dist && npm run dist && cd dist && npm publish lab-queue"
+    "release": "npm version patch && rm -rf dist && npm run dist && cd dist && npm publish"
   },
   "watch": {
     "features": {
