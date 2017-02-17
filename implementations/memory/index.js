@@ -44,7 +44,9 @@ export default function memoryQueueService(config, logger) {
   }
 
   function purge(queueName) {
-    queues[queueName].messages = [];
+    if (exists(queueName)) {
+      queues[queueName].messages = [];
+    }
   }
 
   function purgeIfExists(queueName) {
