@@ -2,7 +2,7 @@
   "name": "lab-queue",
   "version": "1.1.3",
   "description": "General queue provider at Lab.Coop",
-  "main": "dist/index",
+  "main": "index",
   "engines": {
     "node": ">=6.9.1"
   },
@@ -14,7 +14,8 @@
     "features": "NODE_ENV=test node_modules/cucumber/bin/cucumber.js --compiler es6:babel-core/register",
     "features-watch": "NODE_ENV=test node_modules/nodemon/bin/nodemon.js node_modules/cucumber/bin/cucumber.js --compiler es6:babel-core/register",
     "dist": "node_modules/babel-cli/bin/babel.js . --out-dir dist --ignore dist,node_modules --presets es2015",
-    "release": "npm version patch && rm -rf dist && npm run dist && npm publish dist"
+    "prepublish": "cp package.json dist/",
+    "release": "npm version patch && rm -rf dist && npm run dist && cd dist && npm publish"
   },
   "watch": {
     "features": {
