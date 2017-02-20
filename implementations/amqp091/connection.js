@@ -101,11 +101,13 @@ function deleteConnection(connectionKey) {
   delete connections[connectionKey];
 }
 
-export async function getOrCreateChannel(queueName, createChannel, forceNewChannel=false) {
+export async function getOrCreateChannel(queueName, createChannel, forceNewChannel=false, handleChannelError) {
   if (forceNewChannel) {
-    return createChannel();
+    const channel = await createChannel();
+    handleChannelError(channel);
   } else if (!channels.hasOwnProperty(queueName)) {
     channels[queueName] = await createChannel();
+    handleChannelError(channels[queueName]);
   }
   return channels[queueName];
 }

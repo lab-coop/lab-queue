@@ -120,8 +120,7 @@ function queueService(config, logger) {
   }
 
   async function getChannel(queueName, forceNew=false) {
-    const channel = await getOrCreateChannel(queueName, createChannelFactory(), forceNew);
-    handleChannelError(channel);
+    const channel = await getOrCreateChannel(queueName, createChannelFactory(), forceNew, handleChannelError);
     return channel;
   }
 

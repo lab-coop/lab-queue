@@ -58,7 +58,9 @@ it('should create a new connection if the connection string differs', async func
 
 it('create channel should call channel creator exactly once', async function() {
   const channelCreator = jest.fn();
-  await getOrCreateChannel('test-channel', channelCreator);
+  const errorHandler = jest.fn();
+  await getOrCreateChannel('test-channel', channelCreator, false, errorHandler);
   expect(channelCreator.mock.calls.length).toBe(1);
+  expect(errorHandler.mock.calls.length).toBe(1);
 });
 
