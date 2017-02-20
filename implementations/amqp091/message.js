@@ -1,4 +1,4 @@
-export function handle(messageHandler, ack, nack) {
+export function handle(messageHandler, ack, nack, errorLogger) {
   return async function (message) {
     if (message !== null) {
       try {
@@ -6,7 +6,7 @@ export function handle(messageHandler, ack, nack) {
         ack(message);
       } catch (error) {
         nack(message);
-        throw new Error(error);
+        errorLogger(error);
       }
     } else {
       // consuming cancelled OR queue deleted
