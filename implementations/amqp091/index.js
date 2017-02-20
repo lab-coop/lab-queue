@@ -10,7 +10,9 @@ import {
 
 import {
   addCancelConsuming,
-  runAllCancelConsuming
+  runAllCancelConsuming,
+  ackFactory,
+  nackFactory
 } from './helpers';
 
 import shortid from 'shortid';
@@ -37,7 +39,7 @@ function queueService(config, logger) {
     await channel.prefetch(options.prefetchCount);
     const consumerOptions = pick(options, ['noLocal', 'noAck', 'exclusive', 'priority', 'arguments']);
     consumerOptions.consumerTag = shortid.generate();
-    channel.consume(queueName, handleMessage(messageHandler, ackFactory(channel), nackFactory(channel)), consumerOptions);
+    channel.consume(queueName, handleMessage(messageHandler, ackFactory(channel), nackFactory(channel, logger.error)), consumerOptions);
     const cancelConsuming = cancelConsumeFactory(channel, consumerOptions.consumerTag);
     addCancelConsuming(queueName, cancelConsuming);
     return cancelConsuming;
@@ -134,13 +136,6 @@ function queueService(config, logger) {
     }
   }
 
-  function ackFactory(channel) {
-    return message => channel.ack(message);
-  }
-
-  function nackFactory(channel) {
-    return message => channel.nack(message);
-  }
 }
 
 export default queueService;
