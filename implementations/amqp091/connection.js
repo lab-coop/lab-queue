@@ -2,7 +2,6 @@ import crypto from 'crypto';
 import amqp from 'amqplib';
 import { isInteger, defaults, values } from 'lodash';
 const connections = {};
-const channels = {};
 const url = require('url');
 
 export async function getConnection(config) {
@@ -57,7 +56,7 @@ export function storeConnectionFactory(key) {
 
 export function connectFactory(connectionUrl) {
   return async function () {
-    console.log('Connecting on: '+connectionUrl);
+    console.log('Connecting to: '+connectionUrl);
     return await amqp.connect(connectionUrl);
   }
 }
@@ -101,35 +100,6 @@ function deleteConnection(connectionKey) {
   delete connections[connectionKey];
 }
 
-export async function getOrCreateChannel(queueName, createChannel, forceNewChannel=false, handleChannelError) {
-  if (forceNewChannel) {
-    const channel = await createChannel();
-    handleChannelError(channel);
-  } else if (!channels.hasOwnProperty(queueName)) {
-    channels[queueName] = await createChannel();
-    handleChannelError(channels[queueName]);
-  }
-  return channels[queueName];
-}
-
-export function getChannels() {
-  return channels;
-}
-
-export function handleChannelError(channel) {
-  channel.on('error', error => {
-    if (/404/.test(error)) {
-
-    } else {
-      console.log('ERROR', error);
-    }
-  });
-
-  channel.on('blocked', reason => {
-    console.log('BLOCKED', reason);
-  });
-}
-
 export function punishNonExistentQueue(queueName, queueData) {
   if (queueData === false) {
     throw new Error(`Queue "${queueName}" doesn\'t exist.`);
@@ -140,14 +110,7 @@ export async function runQueueOperation(queueOperation) {
   try {
     return await queueOperation();
   } catch(err) {
-    return false;
-  }
-}
-
-export function closeChannel(channel) {
-  try {
-    return channel.closeChannel();
-  } catch(err) {
+    console.log(err);
     return false;
   }
 }

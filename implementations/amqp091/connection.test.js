@@ -3,7 +3,6 @@ import {
   getConnections,
   closeConnection,
   closeConnections,
-  getOrCreateChannel
   assertHeartBeatSupport,
 } from './connection';
 
@@ -43,24 +42,18 @@ it('shouldn\'t complain to close an already closed connection', async function()
   await closeConnection(connection);
 });
 
-it('should reuse an already established connection', async function() {
-  await getConnection(connectionConfigs[0]);
-  await getConnection(connectionConfigs[0]);
-  expect(Object.keys(getConnections())).toHaveLength(1);
-});
+describe('getConnection', () => {
+  it('should reuse an already established connection', async function() {
+    await getConnection(connectionConfigs[0]);
+    await getConnection(connectionConfigs[0]);
+    expect(Object.keys(getConnections())).toHaveLength(1);
+  });
 
-it('should create a new connection if the connection string differs', async function() {
-  await getConnection(connectionConfigs[0]);
-  await getConnection(connectionConfigs[0]);
-  await getConnection(connectionConfigs[1]);
-  expect(Object.keys(getConnections())).toHaveLength(2);
-});
-
-it('create channel should call channel creator exactly once', async function() {
-  const channelCreator = jest.fn();
-  const errorHandler = jest.fn();
-  await getOrCreateChannel('test-channel', channelCreator, false, errorHandler);
-  expect(channelCreator.mock.calls.length).toBe(1);
-  expect(errorHandler.mock.calls.length).toBe(1);
+  it('should create a new connection if the connection string differs', async function() {
+    await getConnection(connectionConfigs[0]);
+    await getConnection(connectionConfigs[0]);
+    await getConnection(connectionConfigs[1]);
+    expect(Object.keys(getConnections())).toHaveLength(2);
+  });
 });
 

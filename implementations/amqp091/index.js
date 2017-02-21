@@ -1,12 +1,17 @@
 import { handle as handleMessage, encode } from './message';
 import {
   getConnection,
-  getOrCreateChannel,
-  handleChannelError,
-  closeChannel,
   punishNonExistentQueue,
   runQueueOperation,
 } from './connection';
+
+import {
+  getChannels,
+  getOrCreateChannel,
+  removeAllChannels,
+  handleChannelError,
+  closeChannel,
+} from './channels';
 
 import {
   addCancelConsuming,
