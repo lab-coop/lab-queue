@@ -38,10 +38,10 @@ module.exports = function() {
     await queue.getChannelAssert(queueName);
   });
 
-  // this.Given('there is no consumer on "$queueName"', async function (queueName) {
-  //   const queue = await container.queue;
-  //   await queue.cancelAllConsuming(queueName);
-  // });
+  this.When('"$queueName" is purged', async function (queueName) {
+    const queue = await container.queue;
+    await queue.purge(queueName);
+  });
 
   this.When('a random message pushed to queue "$queueName"', async function (queueName) {
     const queue = await container.queue;

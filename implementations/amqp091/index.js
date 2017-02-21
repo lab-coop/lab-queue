@@ -95,11 +95,13 @@ function queueService(config, logger) {
 
   async function purge(queueName) {
     return safeQueueOperation(queueName, purgeQueueFactory(queueName));
-    const channel = await getChannel(queueName);
-    return purgeQueueFactory(queueName)(channel);
   }
 
-  function purgeIfExists(queueName) {
+  async function purgeIfExists(queueName) {
+    if (await exists(queueName)) {
+      const channel = await getChannel(queueName);
+      return purgeQueueFactory(queueName)(channel);
+    }
   }
 
   function purgeQueueFactory(queueName) {

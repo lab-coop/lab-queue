@@ -31,6 +31,15 @@ Feature: Queue
     When a consumer is attached to queue "test-queue"
     Then "test-queue" has 1 consumer
 
+  Scenario: Messages are purged
+    Given "test-queue" is an empty, existing queue, without consumer
+    And "test-queue" has 0 consumer
+    And "test-queue" contains 0 message
+    When a random message pushed to queue "test-queue"
+    And "test-queue" contains 1 message
+    And "test-queue" is purged
+    Then "test-queue" contains 0 message
+
   Scenario: Push and pull
     Given "test-queue" is an empty, existing queue, without consumer
     And "test-queue" has 0 consumer
