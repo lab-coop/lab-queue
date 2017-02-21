@@ -3,8 +3,8 @@ import {
   getConnections,
   closeConnection,
   closeConnections,
-  assertHearthBeatSupport,
   getOrCreateChannel
+  assertHeartBeatSupport,
 } from './connection';
 
 const connectionConfigs = [
@@ -19,11 +19,11 @@ afterEach(async function() {
   await closeConnections();
 });
 
-it('should add hearthbeat parameter', () => {
-  expect(assertHearthBeatSupport('amqp://localhost')).toBe('amqp://localhost');
-  expect(assertHearthBeatSupport('amqp://localhost', false)).toBe('amqp://localhost');
-  expect(assertHearthBeatSupport('amqp://localhost', true)).toBe('amqp://localhost');
-  expect(assertHearthBeatSupport('amqp://localhost', 10)).toBe('amqp://localhost?hearthbeat=10');
+it('should add heartbeat parameter', () => {
+  expect(assertHeartBeatSupport('amqp://localhost')).toBe('amqp://localhost');
+  expect(assertHeartBeatSupport('amqp://localhost', false)).toBe('amqp://localhost');
+  expect(assertHeartBeatSupport('amqp://localhost', true)).toBe('amqp://localhost');
+  expect(assertHeartBeatSupport('amqp://localhost', 10)).toBe('amqp://localhost?heartbeat=10');
 });
 
 it('should create a connection', async function() {
