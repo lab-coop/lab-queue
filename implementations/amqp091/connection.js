@@ -77,6 +77,7 @@ export function addUrlParameter(connectionUrl, name, value) {
     urlObject.protocol,
     '//',
     urlObject.auth,
+    urlObject.auth ? '@' : '',
     urlObject.host,
     urlObject.pathname,
     '?' + pars.join('&')

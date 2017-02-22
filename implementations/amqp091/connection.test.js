@@ -19,6 +19,7 @@ afterEach(async function() {
 });
 
 it('should add heartbeat parameter', () => {
+  expect(assertHeartBeatSupport('amqp://guest:guest@rabbitmq', 10)).toBe('amqp://guest:guest@rabbitmq?heartbeat=10');
   expect(assertHeartBeatSupport('amqp://localhost')).toBe('amqp://localhost');
   expect(assertHeartBeatSupport('amqp://localhost', false)).toBe('amqp://localhost');
   expect(assertHeartBeatSupport('amqp://localhost', true)).toBe('amqp://localhost');
@@ -56,4 +57,3 @@ describe('getConnection', () => {
     expect(Object.keys(getConnections())).toHaveLength(2);
   });
 });
-
