@@ -44,7 +44,7 @@ function queueService(config, logger) {
     await channel.prefetch(options.prefetchCount);
     const consumerOptions = pick(options, ['noLocal', 'noAck', 'exclusive', 'priority', 'arguments']);
     consumerOptions.consumerTag = shortid.generate();
-    channel.consume(queueName, handleMessage(messageHandler, ackFactory(channel), nackFactory(channel, logger.error)), consumerOptions);
+    channel.consume(queueName, handleMessage(messageHandler, ackFactory(channel), nackFactory(channel), logger.error), consumerOptions);
     const cancelConsuming = cancelConsumeFactory(channel, consumerOptions.consumerTag);
     addCancelConsuming(queueName, cancelConsuming);
     return cancelConsuming;
