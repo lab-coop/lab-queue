@@ -2,7 +2,7 @@ export function handle(messageHandler, ack, nack, errorLogger) {
   return async function (message) {
     if (message !== null) {
       try {
-        await Promise.resolve(messageHandler(decode(message)));
+        await messageHandler(decode(message));
         ack(message);
       } catch (error) {
         nack(message);
