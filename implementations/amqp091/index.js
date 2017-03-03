@@ -45,7 +45,7 @@ function queueService(config, logger) {
     const consumerOptions = pick(options, ['noLocal', 'noAck', 'exclusive', 'priority', 'arguments']);
     consumerOptions.consumerTag = shortid.generate();
     channel.consume(queueName, handleMessage(messageHandler, ackFactory(channel), nackFactory(channel), logger.error), consumerOptions);
-    const cancelConsuming = cancelConsumeFactory(channel, consumerOptions.consumerTag);
+    const cancelConsuming = () => channel.cancel(consumerOptions.consumerTag);
     addCancelConsuming(queueName, cancelConsuming);
     return cancelConsuming;
   }
@@ -129,10 +129,6 @@ function queueService(config, logger) {
   async function getChannel(queueName, forceNew=false) {
     const channel = await getOrCreateChannel(queueName, createChannelFactory(), forceNew, handleChannelError);
     return channel;
-  }
-
-  function cancelConsumeFactory(channel, consumerTag) {
-    return () => channel.cancel(consumerTag);
   }
 
   function createChannelFactory() {
