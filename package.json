@@ -1,6 +1,6 @@
 {
   "name": "lab-queue",
-  "version": "1.1.13",
+  "version": "2.0.0",
   "description": "General queue provider at Lab.Coop",
   "main": "index",
   "engines": {
@@ -70,8 +70,8 @@
     "babel-runtime": "^6.20.0",
     "bottlejs": "^1.5.0",
     "config": "^1.25.1",
-    "lab-config": "github:lab-coop/lab-config",
-    "lab-di": "github:lab-coop/lab-di",
+    "lab-config": "1.0.0",
+    "lab-di": "1.1.5",
     "lodash": "^4.17.2",
     "rr": "^0.1.0",
     "shortid": "^2.2.6",

@@ -1,4 +1,7 @@
-export default (config, logger) => {
-  const implementationName = config.get('queue.type') || 'amqp091';
-  return require(`./implementations/${implementationName}`).default(config, logger)
+function Queue(container) {
+  const implementation = container.get('config').get(Queue.serviceName);
+  return container.getImplementation(Queue.serviceName, implementation);
 }
+
+Queue.type = 'factory';
+module.exports = Queue;

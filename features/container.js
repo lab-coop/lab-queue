@@ -1,9 +1,11 @@
-const di =  new (require('bottlejs'))();
-import queue from '../index';
+import tools from 'lab-di/tools';
 
-const config = function () {
-  return require('config');
-};
+const diTools = tools();
+const di = diTools.getDI();
+
+di.registerModule(require('lab-config'), 'config');
+di.registerModule(require('lab-config/implementations/memory'), 'config-memory');
+di.registerModule(require('lab-config/implementations/file'), 'config-file');
 
 function logger() {
   return () => ({
@@ -13,9 +15,10 @@ function logger() {
   })
 }
 
+di.registerModule(logger, 'logger');
+diTools.registerModuleDir(__dirname+'/../', 'queue');
 
-di.service('config', config);
-di.service('logger', logger);
-di.service('queue', queue, 'config', 'logger');
+const config = di.container.get('config');
+config.update('queue', 'memory');
 
 module.exports = di.container;
